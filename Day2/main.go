@@ -9,29 +9,26 @@ import (
 
 func main() {
 
-	// pointMap := map[string]int{
-	// 	"X": 1,
-	// 	"Y": 2,
-	// 	"Z": 3,
-	// }
-
-	newPointMap := map[string]int{
+	pointMap := map[string]int{
+		"X": 1,
+		"Y": 2,
+		"Z": 3,
 		"A": 1,
 		"B": 2,
 		"C": 3,
 	}
 
-	// winnerMap := map[string]string{
-	// 	"A": "Y",
-	// 	"B": "Z",
-	// 	"C": "X",
-	// }
+	winnerMap := map[string]string{
+		"A": "Y",
+		"B": "Z",
+		"C": "X",
+	}
 
-	// drawMap := map[string]string{
-	// 	"A": "X",
-	// 	"B": "Y",
-	// 	"C": "Z",
-	// }
+	drawMap := map[string]string{
+		"A": "X",
+		"B": "Y",
+		"C": "Z",
+	}
 
 	playMap := map[string]map[string]string{
 		"A": {"X": "C", "Y": "A", "Z": "B"},
@@ -47,45 +44,52 @@ func main() {
 	fileScanner := bufio.NewScanner(readFile)
 
 	fileScanner.Split(bufio.ScanLines)
-	strategyScore := 0
+	strategyScorePart1 := 0
+	strategyScorePart2 := 0
+
 	for fileScanner.Scan() {
 		stringVal := fileScanner.Text()
 		moves := strings.Fields(stringVal)
-		roundScore := 0
-		// if moves[1] == drawMap[moves[0]] {
-		// 	fmt.Println("Draw")
-		// 	roundScore += 3
-		// } else if moves[1] == winnerMap[moves[0]] {
-		// 	fmt.Println("Win")
-		// 	roundScore += 6
-		// } else {
-		// 	fmt.Println("Lost")
-		// }
-		// roundScore += pointMap[moves[1]]
-		// strategyScore += roundScore
+		roundScorePart1 := 0
+		roundScorePart2 := 0
 
+		//Part 1
+		if moves[1] == drawMap[moves[0]] {
+			fmt.Println("Draw")
+			roundScorePart1 += 3
+		} else if moves[1] == winnerMap[moves[0]] {
+			fmt.Println("Win")
+			roundScorePart1 += 6
+		} else {
+			fmt.Println("Lost")
+		}
+		roundScorePart1 += pointMap[moves[1]]
+		strategyScorePart1 += roundScorePart1
+
+		//Part 2
 		moveToPlay := playMap[moves[0]][moves[1]]
-
 		if moves[1] == "X" {
 			//loose
-			roundScore += 0
+			roundScorePart2 += 0
 		} else if moves[1] == "Y" {
 			//draw
-			roundScore += 3
+			roundScorePart2 += 3
 		} else {
 			//win
-			roundScore += 6
+			roundScorePart2 += 6
 		}
+		roundScorePart2 += pointMap[moveToPlay]
 
-		fmt.Println(moves)
-		fmt.Println(moveToPlay)
-		roundScore += newPointMap[moveToPlay]
+		strategyScorePart2 += roundScorePart2
 
-		fmt.Println("Round Score", roundScore)
-		strategyScore += roundScore
+		fmt.Println("Moves", moves)
+		fmt.Println("Move to play Part 2", moveToPlay)
+		fmt.Println("Round Score Part 1", roundScorePart1)
+		fmt.Println("Round Score Part 2", roundScorePart2)
 	}
 
-	fmt.Println("Strategy Score", strategyScore)
+	fmt.Println("Strategy Score Part 1", strategyScorePart1)
+	fmt.Println("Strategy Score Part 2", strategyScorePart2)
 
 	readFile.Close()
 }
