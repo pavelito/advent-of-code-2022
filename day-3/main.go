@@ -18,6 +18,8 @@ func findCommonLetter(a string, b string) rune {
 	return 0
 }
 
+//The trick here is, store ALL the common letters between a and b
+//Whereas the first common letter between a+b and c (thus reusing the function for stage 2)
 func findCommonLetterPart2(a string, b string, c string) rune {
 	var commonLettersFirstPass []rune
 	for _, charA := range a {
@@ -27,14 +29,7 @@ func findCommonLetterPart2(a string, b string, c string) rune {
 			}
 		}
 	}
-	for _, charCommon := range commonLettersFirstPass {
-		for _, charC := range c {
-			if charCommon == charC {
-				return charCommon
-			}
-		}
-	}
-	return 0
+	return findCommonLetter(string(commonLettersFirstPass), c)
 }
 
 func getPriority(commonLetter rune) int {
@@ -55,39 +50,44 @@ func main() {
 	fileScanner := bufio.NewScanner(readFile)
 
 	fileScanner.Split(bufio.ScanLines)
-	sumPriority := 0
+	sumPriorityPart1 := 0
+	sumPriorityPart2 := 0
 	lineCounter := 0
 	var groupOfBags [3]string
 	for fileScanner.Scan() {
 		stringVal := fileScanner.Text()
-		moduloLine := lineCounter % 3
+
+		//Part 1
+		//8394
+		sizeCompartment := len(stringVal) / 2
+		compartment1 := stringVal[0:sizeCompartment]
+		compartment2 := stringVal[sizeCompartment:]
+
+		// fmt.Println("File Line", stringVal)
+		// fmt.Println("Compartment 1 ", compartment1)
+		// fmt.Println("Compartment 2 ", compartment2)
+		commonLetter := findCommonLetter(compartment1, compartment2)
+		priority := getPriority(commonLetter)
+		// fmt.Println("Common Letter is ", string(commonLetter))
+		// fmt.Println("Priority of common letter is ", priority)
+		sumPriorityPart1 += priority
+
 		//Part 2
+		//2413
+		moduloLine := lineCounter % 3
 		groupOfBags[moduloLine] = stringVal
 
 		if moduloLine == 2 {
 			//calculate group
 			commonLetter := findCommonLetterPart2(groupOfBags[0], groupOfBags[1], groupOfBags[2])
 			priority := getPriority(commonLetter)
-			fmt.Println("Common Letter is ", string(commonLetter))
-			fmt.Println("Priority of common letter is ", priority)
-			sumPriority += priority
+			// fmt.Println("Common Letter is ", string(commonLetter))
+			// fmt.Println("Priority of common letter is ", priority)
+			sumPriorityPart2 += priority
 		}
 		lineCounter++
-
-		//Part 1
-		// sizeCompartment := len(stringVal) / 2
-		// compartment1 := stringVal[0:sizeCompartment]
-		// compartment2 := stringVal[sizeCompartment:]
-
-		// // fmt.Println("File Line", stringVal)
-		// // fmt.Println("Compartment 1 ", compartment1)
-		// // fmt.Println("Compartment 2 ", compartment2)
-		// commonLetter := findCommonLetter(compartment1, compartment2)
-		// priority := getPriority(commonLetter)
-		// fmt.Println("Common Letter is ", string(commonLetter))
-		// fmt.Println("Priority of common letter is ", priority)
-		// sumPriority += priority
 	}
-	fmt.Println("Total Priority ", sumPriority)
+	fmt.Println("Total Priority Part 1", sumPriorityPart1)
+	fmt.Println("Total Priority Part 2", sumPriorityPart2)
 	readFile.Close()
 }
