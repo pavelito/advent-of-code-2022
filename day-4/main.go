@@ -16,17 +16,18 @@ type section struct {
 func fullyContains(a section, b section) bool {
 
 	if a.start >= b.start && a.end <= b.end {
-		fmt.Println(a, " is inside ", b)
+		//fmt.Println(a, " is inside ", b)
 		return true
 	} else if b.start >= a.start && b.end <= a.end {
-		fmt.Println(b, " is inside ", a)
+		//fmt.Println(b, " is inside ", a)
 		return true
 	}
 	return false
 }
 
 func overalps(a section, b section) bool {
-	if b.start <= a.end || a.start <= b.end {
+	if a.end >= b.start && a.start <= b.end {
+		//fmt.Println(a, " overlaps ", b)
 		return true
 	}
 	return false
@@ -44,6 +45,7 @@ func main() {
 	fileScanner.Split(bufio.ScanLines)
 
 	fullyContainsRanges := 0
+	overlapRanges := 0
 
 	for fileScanner.Scan() {
 		stringVal := fileScanner.Text()
@@ -59,14 +61,18 @@ func main() {
 		parsedIntEnd, _ = strconv.Atoi(secB[1])
 		sectionB := section{start: parsedIntStart, end: parsedIntEnd}
 
-		fmt.Println("File Line", stringVal)
-		fmt.Println("Section A ", sectionA)
-		fmt.Println("Section B ", sectionB)
+		//fmt.Println("File Line", stringVal)
+		// fmt.Println("Section A ", sectionA)
+		// fmt.Println("Section B ", sectionB)
 		if fullyContains(sectionA, sectionB) {
 			fullyContainsRanges++
+		}
+		if overalps(sectionA, sectionB) {
+			overlapRanges++
 		}
 	}
 
 	readFile.Close()
 	fmt.Println("No of fully contains - ", fullyContainsRanges)
+	fmt.Println("No of overlaps - ", overlapRanges)
 }
