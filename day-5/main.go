@@ -10,14 +10,13 @@ import (
 
 type Stack []string
 
-// IsEmpty: check if stack is empty
 func (s *Stack) IsEmpty() bool {
 	return len(*s) == 0
 }
 
 // Push a new value onto the stack
 func (s *Stack) Push(str string) {
-	*s = append(*s, str) // Simply append the new value to the end of the stack
+	*s = append(*s, str)
 }
 
 // Remove and return top element of stack. Return false if stack is empty.
@@ -32,6 +31,25 @@ func (s *Stack) Pop() (string, bool) {
 	}
 }
 
+// Remove and return top element of stack. Return false if stack is empty.
+func (s *Stack) PopMultiple(number int) ([]string, bool) {
+	if s.IsEmpty() {
+		return nil, false
+	} else {
+		index := len(*s) - number // Get the index of the top most element.
+		elements := (*s)[index:]  // Index into the slice and obtain all the elements until end.
+		*s = (*s)[:index]         // Remove it from the stack by slicing it off.
+		return elements, true
+	}
+}
+
+// Push a new value onto the stack
+func (s *Stack) PushMultiple(multStr []string) {
+	for _, str := range multStr {
+		*s = append(*s, str) // Simply append the new values to the end of the stack in a loop
+	}
+}
+
 func getStacks() []Stack {
 
 	//Trial
@@ -39,6 +57,7 @@ func getStacks() []Stack {
 	// [N] [C]
 	// [Z] [M] [P]
 	// 1   2   3
+
 	// return []Stack{
 	// 	{"Z", "M"},
 	// 	{"M", "C", "D"},
@@ -55,6 +74,7 @@ func getStacks() []Stack {
 	// [D] [S] [R] [V] [T] [C] [C] [N] [G]
 	// [F] [R] [C] [F] [L] [Q] [F] [D] [P]
 	// 1   2   3   4   5   6   7   8   9
+
 	return []Stack{
 		{"F", "D", "B", "Z", "T", "J", "R", "N"},
 		{"R", "S", "N", "J", "H"},
@@ -87,12 +107,17 @@ func decodeMove(moveText string) move {
 }
 
 func operateOnStack(stacks []Stack, instruction move) {
-	for i := 1; i <= instruction.count; i++ {
-		poppedCrate, popSuccess := stacks[instruction.from].Pop()
-		if popSuccess {
-			stacks[instruction.to].Push(poppedCrate)
-		}
+	// for i := 1; i <= instruction.count; i++ {
+	// 	poppedCrate, popSuccess := stacks[instruction.from].Pop()
+	// 	if popSuccess {
+	// 		stacks[instruction.to].Push(poppedCrate)
+	// 	}
+	// }
+	poppedCrates, popSuccess := stacks[instruction.from].PopMultiple(instruction.count)
+	if popSuccess {
+		stacks[instruction.to].PushMultiple(poppedCrates)
 	}
+
 }
 
 func main() {
