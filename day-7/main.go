@@ -24,9 +24,7 @@ func incrementFileSize(dir *Directory, size int) {
 }
 
 func traverseDirectory(dir *Directory, total *int) {
-	//fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
 	if dir.fileSize <= 100000 {
-		//fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
 		*total += dir.fileSize
 	}
 	if dir.children == nil {
@@ -40,9 +38,9 @@ func traverseDirectory(dir *Directory, total *int) {
 func findMinimumSize(dir *Directory, targetSize int, resultSize *int) {
 	//fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
 	if dir.fileSize >= targetSize {
-		fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
+		//fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
 		if dir.fileSize < *resultSize {
-			fmt.Println("Updating result size to ", dir.fileSize)
+			//fmt.Println("Updating result size to ", dir.fileSize)
 			*resultSize = dir.fileSize
 		}
 
@@ -97,20 +95,20 @@ func main() {
 				parent:   currentDirectory,
 			}
 		} else { //fileout
-			//fmt.Println(consoleOut)
 			fileSize, _ := strconv.Atoi(consoleOut[0])
-			// currentDirectory.fileSize += fileSize
 
 			//now add the filesize to current dir and all the way up to root parent
 			incrementFileSize(currentDirectory, fileSize)
 
 		}
-
-		//fmt.Println(currentDirectory)
 	}
-	//fmt.Println(directoryTree)
-	// fmt.Println(directoryTree.children["a"])
 
+	//Part 1
+	total := 0
+	traverseDirectory(&directoryTree, &total)
+	fmt.Println("Part 1 - Sum of all directories that are at most (max) 100000", total)
+
+	//Part 2
 	totalDiskSize := 70000000
 	updateDiskSize := 30000000
 	minimumCleanupSize := updateDiskSize - (totalDiskSize - directoryTree.fileSize)
@@ -118,11 +116,7 @@ func main() {
 	fmt.Println("Total Current Free size ", totalDiskSize-directoryTree.fileSize)
 	fmt.Println("Minimum Required Free size ", minimumCleanupSize)
 
-	// total := 0
-	// traverseDirectory(&directoryTree, &total)
-	// fmt.Println(total)
-
 	resultSize := totalDiskSize
 	findMinimumSize(&directoryTree, minimumCleanupSize, &resultSize)
-	fmt.Println(resultSize)
+	fmt.Println("Part 2 - Minimum Available Free size to Cleanup ", resultSize)
 }
