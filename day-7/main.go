@@ -26,7 +26,7 @@ func incrementFileSize(dir *Directory, size int) {
 func traverseDirectory(dir *Directory, total *int) {
 	//fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
 	if dir.fileSize <= 100000 {
-		fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
+		//fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
 		*total += dir.fileSize
 	}
 	if dir.children == nil {
@@ -34,6 +34,24 @@ func traverseDirectory(dir *Directory, total *int) {
 	}
 	for _, v := range dir.children {
 		traverseDirectory(v, total)
+	}
+}
+
+func findMinimumSize(dir *Directory, targetSize int, resultSize *int) {
+	//fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
+	if dir.fileSize >= targetSize {
+		fmt.Println(fmt.Sprintf("%s is of size %d and has parent %p", dir.path, dir.fileSize, dir.parent))
+		if dir.fileSize < *resultSize {
+			fmt.Println("Updating result size to ", dir.fileSize)
+			*resultSize = dir.fileSize
+		}
+
+	}
+	if dir.children == nil {
+		return
+	}
+	for _, v := range dir.children {
+		findMinimumSize(v, targetSize, resultSize)
 	}
 }
 
@@ -93,7 +111,18 @@ func main() {
 	//fmt.Println(directoryTree)
 	// fmt.Println(directoryTree.children["a"])
 
-	total := 0
-	traverseDirectory(&directoryTree, &total)
-	fmt.Println(total)
+	totalDiskSize := 70000000
+	updateDiskSize := 30000000
+	minimumCleanupSize := updateDiskSize - (totalDiskSize - directoryTree.fileSize)
+	fmt.Println("Root has size ", directoryTree.fileSize)
+	fmt.Println("Total Current Free size ", totalDiskSize-directoryTree.fileSize)
+	fmt.Println("Minimum Required Free size ", minimumCleanupSize)
+
+	// total := 0
+	// traverseDirectory(&directoryTree, &total)
+	// fmt.Println(total)
+
+	resultSize := totalDiskSize
+	findMinimumSize(&directoryTree, minimumCleanupSize, &resultSize)
+	fmt.Println(resultSize)
 }
