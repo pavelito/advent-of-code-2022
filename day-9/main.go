@@ -12,8 +12,6 @@ import (
 var tailPositions [][2]int
 var headPositions [][2]int
 
-// var currentHeadPosition [2]int
-// var currentTailPosition [2]int
 var currentPositions map[string][2]int
 
 func getUniquePositions(positions [][2]int) [][2]int {
@@ -112,9 +110,18 @@ func move(direction string, steps int) {
 		currentPositions["H"] = getHeadPosition(direction, currentPositions["H"])
 		headPositions = append(headPositions, currentPositions["H"])
 
+		currentPositions["1"] = getTailPosition(currentPositions["H"], currentPositions["1"])
+		currentPositions["2"] = getTailPosition(currentPositions["1"], currentPositions["2"])
+		currentPositions["3"] = getTailPosition(currentPositions["2"], currentPositions["3"])
+		currentPositions["4"] = getTailPosition(currentPositions["3"], currentPositions["4"])
+		currentPositions["5"] = getTailPosition(currentPositions["4"], currentPositions["5"])
+		currentPositions["6"] = getTailPosition(currentPositions["5"], currentPositions["6"])
+		currentPositions["7"] = getTailPosition(currentPositions["6"], currentPositions["7"])
+		currentPositions["8"] = getTailPosition(currentPositions["7"], currentPositions["8"])
+
 		//move tail now
-		currentPositions["T"] = getTailPosition(currentPositions["H"], currentPositions["T"])
-		tailPositions = append(tailPositions, currentPositions["T"])
+		currentPositions["9"] = getTailPosition(currentPositions["8"], currentPositions["9"])
+		tailPositions = append(tailPositions, currentPositions["9"])
 
 	}
 	// fmt.Println("Current Head Position: ", currentHeadPosition)
@@ -124,7 +131,7 @@ func move(direction string, steps int) {
 
 func main() {
 
-	readFile, err := os.Open("inputTrial.txt")
+	readFile, err := os.Open("input.txt")
 	defer readFile.Close()
 	if err != nil {
 		fmt.Println(err)
@@ -143,5 +150,5 @@ func main() {
 		move(direction, steps)
 	}
 
-	fmt.Println("Part 1, count of Tail Positions: ", len(getUniquePositions(tailPositions)))
+	fmt.Println("Part 1/2, count of Tail Positions: ", len(getUniquePositions(tailPositions)))
 }
