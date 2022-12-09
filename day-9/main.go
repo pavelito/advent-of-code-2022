@@ -11,6 +11,7 @@ import (
 
 var tailPositions [][2]int
 var headPositions [][2]int
+var part1TailPositions [][2]int
 
 var currentPositions map[string][2]int
 
@@ -103,13 +104,14 @@ func getTailPosition(currentHeadPosition [2]int, currentTailPosition [2]int) [2]
 }
 
 func move(direction string, steps int) {
-	fmt.Println("Moving ", direction, steps)
+	//fmt.Println("Moving ", direction, steps)
 
 	for step := 1; step <= steps; step++ {
 		//move head
 		currentPositions["H"] = getHeadPosition(direction, currentPositions["H"])
 		headPositions = append(headPositions, currentPositions["H"])
 
+		//move intermediate knots
 		currentPositions["1"] = getTailPosition(currentPositions["H"], currentPositions["1"])
 		currentPositions["2"] = getTailPosition(currentPositions["1"], currentPositions["2"])
 		currentPositions["3"] = getTailPosition(currentPositions["2"], currentPositions["3"])
@@ -123,10 +125,11 @@ func move(direction string, steps int) {
 		currentPositions["9"] = getTailPosition(currentPositions["8"], currentPositions["9"])
 		tailPositions = append(tailPositions, currentPositions["9"])
 
+		//track part 1 tail positions
+		part1TailPositions = append(part1TailPositions, currentPositions["1"])
+
 	}
-	// fmt.Println("Current Head Position: ", currentHeadPosition)
-	// fmt.Println("Current Tail Position: ", currentTailPosition)
-	fmt.Println("Current Positions: ", currentPositions)
+	//fmt.Println("Current Positions: ", currentPositions)
 }
 
 func main() {
@@ -150,5 +153,6 @@ func main() {
 		move(direction, steps)
 	}
 
-	fmt.Println("Part 1/2, count of Tail Positions: ", len(getUniquePositions(tailPositions)))
+	fmt.Println("Part 1, count of Tail Positions: ", len(getUniquePositions(part1TailPositions)))
+	fmt.Println("Part 2, count of Tail Positions: ", len(getUniquePositions(tailPositions)))
 }
