@@ -97,9 +97,9 @@ func main() {
 		// fmt.Println("pixel value: ", (cycle-1)%40)
 		pixelValue := (cycle - 1) % 40
 		if duringValue-1 <= pixelValue && pixelValue <= duringValue+1 {
-			fmt.Print("#")
+			fmt.Print("█")
 		} else {
-			fmt.Print(".")
+			fmt.Print(" ")
 		}
 		if cycle%40 == 0 {
 			fmt.Println()
