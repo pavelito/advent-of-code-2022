@@ -83,8 +83,27 @@ func main() {
 		// fmt.Println("Register Value During: ", registerValueDuring)
 		// fmt.Println("Register Value After: ", registerValueAfter)
 	}
+
 	signalStrengths := getSignalStrengths(registerValueDuring)
-	fmt.Println("Strengths: ", signalStrengths)
+	// fmt.Println("Strengths: ", signalStrengths)
 	fmt.Println("Part 1, Sum of Strengths: ", getTotalSignalStrength(signalStrengths))
+
+	fmt.Println("Part 2:")
+	fmt.Println()
+	//draw the lines
+	for cycle := 1; cycle <= 240; cycle++ {
+		duringValue := registerValueDuring[cycle]
+		// fmt.Println(duringValue)
+		// fmt.Println("pixel value: ", (cycle-1)%40)
+		pixelValue := (cycle - 1) % 40
+		if duringValue-1 <= pixelValue && pixelValue <= duringValue+1 {
+			fmt.Print("#")
+		} else {
+			fmt.Print(".")
+		}
+		if cycle%40 == 0 {
+			fmt.Println()
+		}
+	}
 
 }
