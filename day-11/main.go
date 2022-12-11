@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -20,7 +22,7 @@ type Monkey struct {
 	testFalseMonkey int
 }
 
-func executeRound(monkeys []*Monkey) {
+func executeRound(monkeys []*Monkey, isPart2 bool) {
 	for _, v := range monkeys {
 		//fmt.Println("Executing Monkey ", i)
 		for _, item := range v.items {
@@ -40,11 +42,14 @@ func executeRound(monkeys []*Monkey) {
 			//
 			//increment the inspection count for that monkey
 			v.inspectionCount++
-			//gets bored now Part 1
-			//worryLevel = int(math.Round(float64(worryLevel / 3)))
 
 			//Part 2
-			worryLevel = worryLevel % leastCommonMultiple
+			if isPart2 {
+				worryLevel = worryLevel % leastCommonMultiple
+			} else {
+				//gets bored now Part 1
+				worryLevel = int(math.Round(float64(worryLevel / 3)))
+			}
 
 			//decide where to throw
 			var targetMonkey *Monkey
@@ -149,10 +154,10 @@ func main() {
 		leastCommonMultiple = leastCommonMultiple * m.testFactor
 	}
 
-	//Begin Logic
-	for round := 1; round <= 10000; round++ {
+	//Begin Logic Part 1
+	for round := 1; round <= 20; round++ {
 		//fmt.Println("Executing Round: ", round)
-		executeRound(monkeys)
+		executeRound(monkeys, false)
 		if round == 1 || round == 20 || round == 1000 || round == 10000 {
 			fmt.Println("After Round: ", round)
 			for _, v := range monkeys {
@@ -162,7 +167,31 @@ func main() {
 		}
 	}
 
-	// for _, v := range monkeys {
-	// 	fmt.Println("Monkey Activity: ", v.inspectionCount)
-	// }
+	inspectionCounts := []int{}
+	for _, v := range monkeys {
+		inspectionCounts = append(inspectionCounts, v.inspectionCount)
+	}
+	sort.Ints(inspectionCounts)
+	fmt.Println("Part 1: ", inspectionCounts[len(inspectionCounts)-1]*inspectionCounts[len(inspectionCounts)-2])
+
+	//Begin Logic Part 2
+	for round := 1; round <= 10000; round++ {
+		//fmt.Println("Executing Round: ", round)
+		executeRound(monkeys, true)
+		if round == 1 || round == 20 || round == 1000 || round == 10000 {
+			fmt.Println("After Round: ", round)
+			for _, v := range monkeys {
+				fmt.Println("Monkey Activity: ", v.inspectionCount)
+			}
+			fmt.Println()
+		}
+	}
+
+	inspectionCounts = []int{}
+	for _, v := range monkeys {
+		inspectionCounts = append(inspectionCounts, v.inspectionCount)
+	}
+	sort.Ints(inspectionCounts)
+	fmt.Println("Part 2: ", inspectionCounts[len(inspectionCounts)-1]*inspectionCounts[len(inspectionCounts)-2])
+
 }
