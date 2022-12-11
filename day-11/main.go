@@ -3,11 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 	"strings"
 )
+
+var leastCommonMultiple int
 
 type Monkey struct {
 	items           []int
@@ -39,8 +40,11 @@ func executeRound(monkeys []*Monkey) {
 			//
 			//increment the inspection count for that monkey
 			v.inspectionCount++
-			//gets bored now
-			worryLevel = int(math.Round(float64(worryLevel / 3)))
+			//gets bored now Part 1
+			//worryLevel = int(math.Round(float64(worryLevel / 3)))
+
+			//Part 2
+			worryLevel = worryLevel % leastCommonMultiple
 
 			//decide where to throw
 			var targetMonkey *Monkey
@@ -139,13 +143,26 @@ func main() {
 			monkeyLines = []string{}
 		}
 	}
-	//Begin Logic
-	for round := 1; round <= 20; round++ {
-		fmt.Println("Executing Round: ", round)
-		executeRound(monkeys)
+
+	leastCommonMultiple = 1
+	for _, m := range monkeys {
+		leastCommonMultiple = leastCommonMultiple * m.testFactor
 	}
 
-	for _, v := range monkeys {
-		fmt.Println("Monkey Activity: ", v.inspectionCount)
+	//Begin Logic
+	for round := 1; round <= 10000; round++ {
+		//fmt.Println("Executing Round: ", round)
+		executeRound(monkeys)
+		if round == 1 || round == 20 || round == 1000 || round == 10000 {
+			fmt.Println("After Round: ", round)
+			for _, v := range monkeys {
+				fmt.Println("Monkey Activity: ", v.inspectionCount)
+			}
+			fmt.Println()
+		}
 	}
+
+	// for _, v := range monkeys {
+	// 	fmt.Println("Monkey Activity: ", v.inspectionCount)
+	// }
 }
