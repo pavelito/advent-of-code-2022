@@ -61,9 +61,6 @@ func main() {
 		parsedIntEnd, _ = strconv.Atoi(secB[1])
 		sectionB := section{start: parsedIntStart, end: parsedIntEnd}
 
-		//fmt.Println("File Line", stringVal)
-		// fmt.Println("Section A ", sectionA)
-		// fmt.Println("Section B ", sectionB)
 		if fullyContains(sectionA, sectionB) {
 			fullyContainsRanges++
 		}
