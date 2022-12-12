@@ -63,13 +63,9 @@ func main() {
 		compartment1 := stringVal[0:sizeCompartment]
 		compartment2 := stringVal[sizeCompartment:]
 
-		// fmt.Println("File Line", stringVal)
-		// fmt.Println("Compartment 1 ", compartment1)
-		// fmt.Println("Compartment 2 ", compartment2)
 		commonLetter := findCommonLetter(compartment1, compartment2)
 		priority := getPriority(commonLetter)
-		// fmt.Println("Common Letter is ", string(commonLetter))
-		// fmt.Println("Priority of common letter is ", priority)
+
 		sumPriorityPart1 += priority
 
 		//Part 2
@@ -81,8 +77,7 @@ func main() {
 			//calculate group
 			commonLetter := findCommonLetterPart2(groupOfBags[0], groupOfBags[1], groupOfBags[2])
 			priority := getPriority(commonLetter)
-			// fmt.Println("Common Letter is ", string(commonLetter))
-			// fmt.Println("Priority of common letter is ", priority)
+
 			sumPriorityPart2 += priority
 		}
 		lineCounter++
