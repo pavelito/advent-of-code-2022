@@ -138,11 +138,8 @@ func main() {
 
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
-		//fmt.Println("File Line", stringVal)
-
 		monkeyLines = append(monkeyLines, line)
-		// fmt.Println("Line: ", line)
-		// fmt.Println("Lines: ", monkeyLines)
+
 		if line == "" {
 			monkeys = append(monkeys, getMonkeyFromLines(monkeyLines))
 			monkeyLines = []string{}
