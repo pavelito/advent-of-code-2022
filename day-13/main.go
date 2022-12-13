@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"sort"
 	"strings"
 )
 
@@ -30,8 +31,32 @@ func main() {
 			sumOfIndexes += (i / 2) + 1
 		}
 	}
-
 	fmt.Println("Part 1: ", sumOfIndexes)
+
+	// Part 2
+	// Add divider packets
+	var divider1 []any
+	var divider2 []any
+	json.Unmarshal([]byte("[[2]]"), &divider1)
+	json.Unmarshal([]byte("[[6]]"), &divider2)
+	messages = append(messages, divider1, divider2)
+
+	// Sort packets
+	sort.Slice(
+		messages,
+		func(i, j int) bool {
+			return isLess(messages[i], messages[j])
+		},
+	)
+
+	// Compute decoder key
+	decoderKey := 1
+	for i, message := range messages {
+		if compare(message, divider1) == 0 || compare(message, divider2) == 0 {
+			decoderKey *= i + 1
+		}
+	}
+	fmt.Println("Part 2: ", decoderKey)
 }
 
 func isLess(message1 []any, message2 []any) bool {
